@@ -15,7 +15,7 @@
     <div class="card shadow card-body">
         <div class="table-responsive">
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped" id="table-sliders">
                     <thead>
                         <tr>
                             <th class="table-fit">#</th>
@@ -50,17 +50,8 @@
                                 </td>
                                 <td>{{ $slider->caption }}</td>
                                 <td class="table-fit">
-                                    <form id="form-action" method="POST" action="#" accept-charset="UTF-8">
-
-                                        <div class="table-links">
-                                            <a href="#">Edit</a>
-                                            <div class="bullet"></div>
-                                            <button type="submit" class="btn text-danger btn-link"
-                                                onclick="return confirm('Anda yakin akan menghapus data ?');">
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </form>
+                                    <button onClick="edit(`'.$row->id.'`)" class="btn btn-primary btn-sm text-white mx-2">Edit</button>
+                                    <button onClick="deletePost(`'.$row->id.'`)" class="btn btn-danger btn-sm text-white mx-2">Delete</button>
                                 </td>
                             </tr>
                         @empty
@@ -78,16 +69,15 @@
     <div class="modal fade" id="sliderFormModal" tabindex="-1" aria-labelledby="sliderFormModal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="#" method="post" id="form-category">
+                <form action="{{ route('sliders.store') }}" method="post" id="form-sliders">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="CategoryForm">Slider Form</h5>
+                        <h5 class="modal-title" id="SliderForm">Slider Form</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="hidden" name="id" id="id">
                             <label for="name">Nama</label>
                             <input type="text" id="name" class="form-control" name="name"
                                 placeholder="Masukkan Nama Kategori">
@@ -122,23 +112,7 @@
     </div>
 @endsection
 
-@section('content')
-    <div class="d-flex justify-content-between align-items-start mb-2">
-        <h2 class="section-title m-0 mb-4">
-            Data Slider
-        </h2>
-        <a href="#" class="btn btn-primary">Add New</a>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body p-0">
-
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
+@include('components.data-table')
 
 @push('scripts')
     <script>
@@ -146,7 +120,44 @@
             $('#btn-create-slider').on('click', function() {
                 $('#sliderFormModal').modal('show')
             });
+
+            $('#form-sliders').on('submit', function(e) {
+                e.preventDefault();
+                let formData = new FormData(this)
+                ajaxRequestFormData(formData, $(this).attr('action'), "POST")
+                    .then(({
+                        message
+                    }) => {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: message,
+                            icon: 'success',
+                        }).then(() => {
+                            window.location.reload()
+                        })
+                    }).catch((e) => {
+                        console.log(e)
+                        if (typeof(e.responseJSON.message) == 'object') {
+                            let textError = '';
+                            $.each(e.responseJSON.message, function(key, value) {
+                                textError += `${value}<br>`
+                            });
+                            Swal.fire({
+                                title: 'Gagal!',
+                                html: textError,
+                                icon: 'error',
+                            })
+                        } else {
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: e.responseJSON.message,
+                                icon: 'error',
+                            })
+                        }
+                    })
+            })
         })
+
         $('.move').click(function(event) {
             $.post('', {
                 type: $(this).attr('data-type'),

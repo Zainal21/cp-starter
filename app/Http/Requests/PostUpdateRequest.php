@@ -23,14 +23,8 @@ class PostUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        // dd($this->only(['title']));
-        // if ($this->title === $this->title) {
-            $is_valid_title = 'required';
-        // }else {
-        //     $is_valid_title = 'required|unique:post,title';
-        // }
         return [
-            'title' => $is_valid_title,
+            'title' => 'required',
             'category_id' => 'required',
             'thumbnail' => 'image|mimes:jpg,png,gif,jpeg,svg|max:2048',
             'content' => 'required',

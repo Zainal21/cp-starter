@@ -36,8 +36,7 @@
                         class="fas fa-chalkboard-teacher"></i><span>Role Management</span></a>
             </li>
             <li class="{{ request()->is('backup*') ? 'active' : '' }}">
-                <a href="{{ url('/backup') }}" class="nav-link"><i class="fas fa-database"></i><span>Backup
-                        Database</span></a>
+                <a href="{{ url('/backup') }}" class="nav-link"><i class="fas fa-database"></i><span>Perawatan</span></a>
             </li>
             <li class="menu-header">Pengaturan</li>
             <li class="dropdown{{ request()->is('cp/settings*') ? ' active' : '' }}">

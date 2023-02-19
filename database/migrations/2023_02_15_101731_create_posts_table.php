@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('thumbnail');
             $table->text('content');
             $table->string('slug');
+            $table->string('tags');
             $table->enum('status', ['draft', 'publish', 'archive'])->default('draft');
             $table->timestamps();
             $table->softDeletes();

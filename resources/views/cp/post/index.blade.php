@@ -32,11 +32,12 @@
                         <th>publish / Archive</th>
                     </tr>
                 </thead>
-                <tbody> </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
 @endsection
+
 @include('components.data-table')
 
 @push('scripts')
@@ -52,7 +53,11 @@
                 },
                 {
                     data: 'thumnail_image',
-                    name: 'thumnail_image'
+                    name: 'thumnail_image',
+                    render: function(data, type, full, meta) {
+                        let asset = "{{ url('/') }}/"
+                        return `<img src="${asset+data}" height="50"/>`;
+                    }
                 },
                 {
                     data: 'title',
@@ -77,12 +82,254 @@
                 {
                     data: 'action',
                     name: 'action'
-                }, {
+                },
+                {
                     data: 'utils',
                     name: 'utils'
                 },
             ]
             showDataTable('#table-posts', "{{ route('posts.datatable') }}", columns)
+        }
+
+        const deletePost = (id) => {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "untuk menghapus data tersebut!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let route = `{{ url('cp/content/post/` + id + `') }}`
+                    ajaxRequest(null, route, 'DELETE')
+                        .then(({
+                            message
+                        }) => {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: message,
+                                icon: 'success',
+                            }).then(() => {
+                                showPosts()
+                            })
+                        })
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
+                }
+            })
+        }
+
+
+        const publishPost = (id) => {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "untuk mempublish Postingan tersebut!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Publish Sekarang!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let route = `{{ url('cp/content/post/` + id + `/publish') }}`
+                    ajaxRequest(null, route, 'PUT')
+                        .then(({
+                            message
+                        }) => {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: message,
+                                icon: 'success',
+                            }).then(() => {
+                                showPosts()
+                            })
+                        })
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
+                }
+            })
+        }
+
+        const archivePost = (id) => {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "untuk mengarsipkan Postingan tersebut!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Arsipkan Sekarang!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let route = `{{ url('cp/content/post/` + id + `/archive') }}`
+                    ajaxRequest(null, route, 'PUT')
+                        .then(({
+                            message
+                        }) => {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: message,
+                                icon: 'success',
+                            }).then(() => {
+                                showPosts()
+                            })
+                        })
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
+                }
+            })
+        }
+
+        const restorePost = (id) => {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "untuk me-restore Postingan tersebut!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Publish Sekarang!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let route = `{{ url('cp/content/post/utils/` + id + `/restore') }}`
+                    ajaxRequest(null, route, 'PUT')
+                        .then(({
+                            message
+                        }) => {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: message,
+                                icon: 'success',
+                            }).then(() => {
+                                showPosts()
+                            })
+                        })
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
+                }
+            })
+        }
+
+
+        const deletePermanentPost = (id) => {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "untuk mengapus Postingan tersebut secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Publish Sekarang!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let route = `{{ url('cp/content/post/utils/` + id + `/delete-permanent') }}`
+                    ajaxRequest(null, route, 'DELETE')
+                        .then(({
+                            message
+                        }) => {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: message,
+                                icon: 'success',
+                            }).then(() => {
+                                showPosts()
+                            })
+                        })
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
+                }
+            })
         }
     </script>
 @endpush

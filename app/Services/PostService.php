@@ -23,8 +23,8 @@ class PostService
         return DataTables::of($posts)
         ->addColumn('action', function($row){
             $actionBtn = '-';
-            $actionBtn = '<button  class="edit btn btn-success btn-sm mx-2" onClick="showDetailCategory(`'.$row->id.'`)">Edit</button>';
-            $actionBtn .= '<button onClick="deleteCategory(`'.$row->id.'`)" class="delete btn btn-danger btn-sm text-white mx-2">Delete</button>';
+            $actionBtn = '<a class="edit btn btn-info btn-sm mx-2" href="'.route('post.edit', $row->id).'">Edit</a>';
+            $actionBtn .= '<button onClick="deletePost(`'.$row->id.'`)" class="delete btn btn-danger btn-sm text-white mx-2">Delete</button>';
             return $actionBtn;
         })
         ->addColumn('authors_name', function($row){
@@ -47,18 +47,59 @@ class PostService
             return $categoryName;
         })
         ->addColumn('thumnail_image', function($row){
-            $thumbnail = '';
-            return $thumbnail;
+            return $row->thumbnail;
         })
         ->addColumn('created_at', function($row){
             return date('d-m-Y', \strtotime($row->created_at));
         })
         ->addColumn('utils', function($row){
             $actionUtils = '-';
-            $actionUtils = '<button  class="edit btn btn-success btn-sm mx-2" onClick="showDetailCategory(`'.$row->id.'`)">Edit</button>';
-            $actionUtils .= '<button onClick="deleteCategory(`'.$row->id.'`)" class="delete btn btn-danger btn-sm text-white mx-2">Delete</button>';
+            if($row->status === 'draft' || $row->status === 'archive'){
+                $actionUtils = '<button class="btn btn-success btn-sm mx-2" onClick="publishPost(`'.$row->id.'`)">Publish</button>';
+            }else{
+                $actionUtils .= '<button class="btn btn-primary btn-sm text-white mx-2" onClick="archivePost(`'.$row->id.'`)">Archive</button>';
+            }
             return $actionUtils;        })
         ->rawColumns(['action', 'utils', 'thumbnail_image', 'authors_name', 'status_posts', 'category_name','created_at'])
+        ->addIndexColumn()
+        ->make(true);
+    }
+    
+    public function getDatatablesPostInTrash()
+    {
+        $posts = $this->postRepository->getPostInTrash();
+        return DataTables::of($posts)
+        ->addColumn('action', function($row){
+            $actionBtn = '<button onClick="restorePost(`'.$row->id.'`)" class="btn btn-info btn-sm text-white mx-2">Restore</button>';
+            $actionBtn .= '<button onClick="deletePermanentPost(`'.$row->id.'`)" class="btn btn-danger btn-sm text-white mx-2">Delete</button>';
+            return $actionBtn;
+        })
+        ->addColumn('authors_name', function($row){
+            return $row->authors->name;
+        })
+        ->addColumn('status_posts', function($row){
+            $bagdeColor = '';
+            if ($row->status === 'draft') :
+                $badgeColor = 'bagde-warning';
+            elseif ($row->status === 'archive') : 
+                $badgeColor = 'bagde-primary';
+            elseif ($row->status === 'publish') :
+                $badgeColor = 'bagde-success';
+            endif;
+            $status = '<span class="badge '.$badgeColor.'">'. $row->status .'</span>';
+            return $status;
+        })
+        ->addColumn('category_name', function($row){
+            $categoryName = $row->category->name;
+            return $categoryName;
+        })
+        ->addColumn('thumnail_image', function($row){
+            return $row->thumbnail;
+        })
+        ->addColumn('created_at', function($row){
+            return date('d-m-Y', \strtotime($row->created_at));
+        })
+        ->rawColumns(['action', 'thumbnail_image', 'authors_name', 'status_posts', 'category_name','created_at'])
         ->addIndexColumn()
         ->make(true);
     }

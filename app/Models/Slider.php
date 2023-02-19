@@ -10,30 +10,20 @@ class Slider extends Model
 {
     use HasFactory;
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::deleting(function($slider) {
-            Utils::removeFile($slider->image);
-        });
-    }
+    protected $guarded = [];
 
     public function scopeOrder($query)
     {
         return $query->orderBy('order', 'asc');
     }
 
-    public function next(){
-        return $this->order()
-                ->where('order', '>', $this->order)
-                ->first();
-
+    public function next()
+    {
+        return $this->order()->where('order', '>', $this->order)->first();
     }
-    public function previous(){
-        return $this->order()
-                ->where('order', '<', $this->order)
-                ->get()
-                ->last();
+
+    public function previous()
+    {
+        return $this->order()->where('order', '<', $this->order)->get()->last();
     }
 }

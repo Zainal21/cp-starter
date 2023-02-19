@@ -39,21 +39,25 @@ Route::group(['middleware' => 'auth'], function(){
         Route::resource('roles', RoleController::class);
         Route::resource('users', UserController::class);
         Route::group(['prefix' => 'content'], function(){
+            // sliders
+            // Route::get('sliders/datatables', [SliderController::class, 'getDatatable'])->name('slider.datatable');
             Route::resource('/sliders', SliderController::class);
+            // categories
             Route::get('categories/datatables', [CategoryController::class, 'getDatatable'])->name('category.datatable');
             Route::resource('categories', CategoryController::class);
             // posts resources
             Route::get('post/datatables', [PostController::class, 'postDatatables'])->name('posts.datatable');
             Route::resource('post', PostController::class);
-            // trash and restore
-            Route::get('post/action/trash', [PostController::class, 'getPostTrash'])->name('post.trash');
-            Route::get('post/action/{id}/restore', [PostController::class, 'restoreTrashedItem'])->name('post.restore');
-            Route::get('post/action/restore-all-data', [PostController::class, 'restoreAllTrashedItem'])->name('post.restore-all');
-            Route::delete('post/action/delete-permanent', [PostController::class, 'deletePermanentAllTrashedItem'])->name('post.delete-all-permanent');
-            Route::delete('post/action/{id}/delete-permanent', [PostController::class, 'deletePermanentTrashedItem'])->name('post.delete-permanent');
-            
-            Route::get('post/{id}/publish', [PostController::class, 'PublishPost'])->name('publish.post');
-            Route::get('post/{id}/archive', [PostController::class, 'ArchivePost'])->name('archive.post');
+            // trash and restore (utils)
+            Route::get('posts-in-trash/datatables', [PostController::class, 'postInTrashDatatables'])->name('posts-in-trash.datatable');
+            Route::get('post/utils/trash', [PostController::class, 'getPostTrash'])->name('post.trash');
+            Route::put('post/utils/{id}/restore', [PostController::class, 'restoreTrashedItem'])->name('post.restore');
+            Route::put('post/utils/restore-all-data', [PostController::class, 'restoreAllTrashedItem'])->name('post.restore-all');
+            Route::delete('post/utils/delete-permanent', [PostController::class, 'deletePermanentAllTrashedItem'])->name('post.delete-all-permanent');
+            Route::delete('post/utils/{id}/delete-permanent', [PostController::class, 'deletePermanentTrashedItem'])->name('post.delete-permanent');
+            // arhive and publish 
+            Route::put('post/{id}/publish', [PostController::class, 'PublishPost'])->name('publish.post');
+            Route::put('post/{id}/archive', [PostController::class, 'ArchivePost'])->name('archive.post');
         });
         Route::group(['prefix' => 'settings'], function(){
             //change user profile

@@ -20,6 +20,13 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/components.min.css') }}" / <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    {{-- <link href="{{ asset('vendor/laravel_backup_panel/bootstrap.css') }}" rel="stylesheet"> --}}
+    {{-- <link href="{{ asset('vendor/laravel_backup_panel/app.css') }}" rel="stylesheet"> --}}
+    @livewireStyles
     <!-- Styles -->
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -105,6 +112,7 @@
     <script src="{{ asset('assets/js/custom.js') }}"></script>
     <script src="{{ asset('assets/modules/select2/dist/js/select2.full.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.20/dist/sweetalert2.all.min.js"></script>
+    @livewireScripts
     <script>
         $(document).ready(function() {
             $.ajaxSetup({

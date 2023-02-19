@@ -33,6 +33,11 @@ class PostController extends Controller
     {
         return $this->postService->getDatatables();
     }
+    
+    public function postInTrashDatatables()
+    {
+        return $this->postService->getDatatablesPostInTrash();
+    }
     /**
      * Display a listing of the resource.
      *
@@ -98,7 +103,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PostRequest $request, $id)
+    public function update(PostUpdateRequest $request, $id)
     {
         return $this->postService->updatePost($request,$id);
     }

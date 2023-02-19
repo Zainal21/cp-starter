@@ -18,7 +18,7 @@
                             <div class="form-group">
                                 <label for="title">Judul</label>
                                 <input type="text" id="title"
-                                    class="form-control @error('title') is-invalid @enderror" name="title" autofocus=""
+                                    class="form-control @error('title') is-invalid @enderror" name="title" id="title" autofocus=""
                                     value="{{ $post->title }}" />
                                 @error('title')
                                     <div class="invalid-feedback">
@@ -103,7 +103,8 @@
             $('#form-update-post').on('submit', function(e) {
                 e.preventDefault()
                 var formData = new FormData(this)
-                ajaxRequestFormData(formData, $(this).attr('action'), "PUT")
+                formData.append('_method', 'PUT')
+                ajaxRequestFormData(formData, $(this).attr('action'), "POST")
                     .then(({
                         message
                     }) => {

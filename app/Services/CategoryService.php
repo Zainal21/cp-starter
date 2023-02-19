@@ -77,7 +77,7 @@ class CategoryService
     public function deleteCategory($category)
     {
         if($category->post()->count()){
-            return redirect()->back()->with('error', 'Data Kategori, Saat ini belum dapat dihapus, Dikarenakan terdapat artikel dari kategori tersebut yang belum terhapus');
+            return ResponseHelper::error('Data Kategori, Saat ini belum dapat dihapus, Dikarenakan terdapat artikel dari kategori tersebut yang belum terhapus');
         }       
         $deleted = $this->categoryRepository->deleteCategory($category->id);
         if(!$deleted) return ResponseHelper::error('Data Kategori tidak ditemukan', null, 404);

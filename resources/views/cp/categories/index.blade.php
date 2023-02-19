@@ -15,7 +15,7 @@
             <table class="table table-striped" id="table-category" width="100%">
                 <thead>
                     <tr>
-                        <th class="text-center">
+                        <th>
                             #
                         </th>
                         <th>Nama Kategori</th>
@@ -57,6 +57,7 @@
         </div>
     </div>
 @endsection
+
 @include('components.data-table')
 
 @push('scripts')
@@ -120,7 +121,8 @@
                 confirmButtonText: 'Yes, delete it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    ajaxRequest(null, `{{ url('cp/content/categories/` + id + `') }}`, 'delete')
+                    let route = `{{ url('cp/content/categories/` + id + `') }}`
+                    ajaxRequest(null, route, 'DELETE')
                         .then(({
                             message
                         }) => {
@@ -134,7 +136,25 @@
                                 $('#CategoryFormModal').modal('hide')
                             })
                         })
-                        .catch((e) => console.error(e))
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
                 }
             })
         }

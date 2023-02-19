@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Cp;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\SliderService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SliderRequest;
 
 class SliderController extends Controller
 {
@@ -11,7 +13,7 @@ class SliderController extends Controller
     
     public function __construct()
     {
-
+        $this->sliderService = new SliderService();
     }
       /**
      * Display a listing of the resource.
@@ -20,8 +22,8 @@ class SliderController extends Controller
      */
     public function index()
     {
-
-        return view('cp.slider.index',);
+        $sliders = $this->sliderService->getDatatables();
+        return view('cp.slider.index',compact('sliders'));
     }
 
     /**
@@ -31,7 +33,7 @@ class SliderController extends Controller
      */
     public function create()
     {
-        return view('cp.slider.create');
+        abort(404);
     }
 
     /**
@@ -42,19 +44,7 @@ class SliderController extends Controller
      */
     public function store(SliderRequest $request)
     {
-        $file = $request->file('image');
-        $sliderImage = $file->move('files/slider/', generateFileName($request->caption, $file));
-
-        $slider = Slider::create([
-            'image' => $sliderImage,
-            'caption' => $request->caption,
-        ]);
-
-        $slider->update([
-            'order' => $slider->id
-        ]);
-
-        return redirect(route('cp.sliders.index'))->with('success', 'Slider berhasil ditambahkan.');
+        return $this->sliderService->createSlider($request);
     }
 
     /**
@@ -120,7 +110,6 @@ class SliderController extends Controller
     {
         $slider->delete();
 
-        return redirect(route('cp.sliders.index'))
-                    ->with('success', 'Slider berhasil dihapus.');
+        return redirect(route('cp.sliders.index'))->with('success', 'Slider berhasil dihapus.');
     }
 }
