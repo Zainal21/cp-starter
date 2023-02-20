@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SliderRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,18 +24,20 @@ class SliderRequest extends FormRequest
     public function rules()
     {
         switch ($this->method()) {
-            case 'PUT':
-              return [
-                'image' => 'required',
-                'caption' => 'required'
-              ];
-            break;
+            case 'POST':
+                return [
+                    'name' => 'required',
+                    'username' => 'required|unique:users,username',
+                    'email' => 'required|email|unique:users,email',
+                    'roles' => 'required',
+                ];
+                break;
             default:
                 return [
-                    'image' => 'required|image',
-                    'caption' => 'required'
+                    'roles' => 'required',
                 ];
-            break;
+                break;
         }
+        
     }
 }

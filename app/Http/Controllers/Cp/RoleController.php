@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Cp;
 
-use App\Http\Controllers\Controller;
-use App\Models\Activity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -29,7 +28,7 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         $roles = Role::orderBy('id','DESC')->paginate(5);
-        return view('Admin.roles.index',compact('roles'));
+        return view('cp.roles.index',compact('roles'));
     }
 
     /**
@@ -40,7 +39,7 @@ class RoleController extends Controller
     public function create()
     {
         $permission = Permission::get();
-        return view('Admin.roles.create',compact('permission'));
+        return view('cp.roles.create',compact('permission'));
     }
 
     /**
@@ -58,7 +57,7 @@ class RoleController extends Controller
     
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
-        Helper::printlog('Menambahkan Role Baru');  
+       
         return redirect()->route('roles.index')
                         ->with('success','Data hak akses pengguna berhasil ditambahkan');
     }
@@ -77,7 +76,7 @@ class RoleController extends Controller
             ->where("role_has_permissions.role_id",$dec)
             ->get();
     
-        return view('Admin.roles.show',compact('role','rolePermissions'));
+        return view('cp.roles.show',compact('role','rolePermissions'));
     }
 
     /**
@@ -94,8 +93,7 @@ class RoleController extends Controller
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$dec)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
-    
-        return view('Admin.roles.edit',compact('role','permission','rolePermissions'));
+        return view('cp.roles.edit',compact('role','permission','rolePermissions'));
     }
 
     /**
@@ -107,6 +105,7 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request);
         $this->validate($request, [
             'name' => 'required',
             'permission' => 'required',
@@ -115,7 +114,7 @@ class RoleController extends Controller
         $role->name = $request->input('name');
         $role->save();
         $role->syncPermissions($request->input('permission'));
-        Helper::printlog('Mengubah Data Role Dengan ID ' . $id . ' Dari Database');    
+        // Helper::printlog('Mengubah Data Role Dengan ID ' . $id . ' Dari Database');    
         return redirect()->route('roles.index')
                         ->with('success','Data hak akses penggunan berhasil diubah');
     }
@@ -129,7 +128,7 @@ class RoleController extends Controller
     public function destroy($id)
     {
         Role::destroy($id);
-        Helper::printlog('Menghapus Data Role dengan ID ' . $id . ' Dari Database');
+        // Helper::printlog('Menghapus Data Role dengan ID ' . $id . ' Dari Database');
         return redirect()->route('roles.index')
                         ->with('success','Data hak akses pengguna berhasil dihapus');
     }

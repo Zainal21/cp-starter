@@ -11,7 +11,7 @@
             <li class="{{ request()->is('home') ? 'active' : '' }}">
                 <a href="{{ route('home') }}" class="nav-link"><i class="fas fa-home"></i><span>Dashboard</span></a>
             </li>
-            <li class="menu-header">Master Data Konten</li>
+            <li class="menu-header">Pengaturan CMS</li>
             <li class="dropdown{{ request()->is('cp/content*') ? ' active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-newspaper"></i><span>Konten</span></a>
                 <ul class="dropdown-menu">
@@ -33,7 +33,7 @@
             </li>
             <li class="{{ request()->is('cp/roles*') ? 'active' : '' }}">
                 <a href="{{ route('roles.index') }}" class="nav-link"><i
-                        class="fas fa-chalkboard-teacher"></i><span>Role Management</span></a>
+                        class="fas fa-chalkboard-teacher"></i><span>Menu dan Hak Akses</span></a>
             </li>
             <li class="{{ request()->is('backup*') ? 'active' : '' }}">
                 <a href="{{ url('/backup') }}" class="nav-link"><i class="fas fa-database"></i><span>Perawatan</span></a>

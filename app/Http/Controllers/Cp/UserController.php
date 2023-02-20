@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\Cp;
 
-use App\Http\Controllers\Controller;
-use App\Models\Activity;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Models\Activity;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
+use App\Services\UserService;
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
+    private $userService;
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +24,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-     
+        $this->userService = new UserService();
     }
     /**
      * Display a listing of the resource.
@@ -30,8 +33,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $data = User::orderBy('id','DESC')->paginate(5);
-        return view('cp.users.index',compact('data'));
+        $data = $this->userService->getUsers();
+        $roles = $this->userService->getRoles();
+        return view('cp.users.index',compact('data', 'roles'));
     }
 
     /**
@@ -41,7 +45,6 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::get();
         return view('cp.users.create',compact('roles'));
     }
 
@@ -51,25 +54,9 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'username' => 'required|unique:users,username',
-            'email' => 'required|email|unique:users,email',
-            'roles' => 'required'
-        ]);
-    
-        $user = User::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt('!AdminLaravel12345')
-        ]);
-        $user->assignRole($request->input('roles'));
-        Helper::printlog('Menambahkan Data Pengguna Baru');
-        return redirect()->route('users.index')
-                        ->with('success','Data Pengguna baru berhasil ditambahkan');
+       return $this->userService->createNewuser($request->all());
     }
 
     /**
@@ -80,7 +67,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return $this->userService->getDetailUser($id);
     }
 
     /**
@@ -91,9 +78,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::findOrfail(Crypt::decrypt($id));
-        $roles = Role::get();
-        return view('cp.users.edit', compact('user', 'roles'));
+        abort(404);
     }
 
     /**
@@ -103,16 +88,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        $request->validate(['roles' => 'required']);
-        $user = User::findOrfail($id);
-        $userRole = $user->getRoleNames();
-        $user->removeRole($userRole[0]);
-        $user->assignRole($request->input('roles'));
-        Helper::printlog('Mengubah role pengguna');
-        return redirect()->route('users.index')
-                        ->with('success','Data Pengguna berhasil diubah');
+        return $this->userService->updateUserRole($request->all(), $id);
     }
 
     /**
@@ -121,14 +99,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        if($user->post()->count()){
-            return redirect()->back()->with('error', 'Data User, Saat ini belum dapat dihapus, Dikarenakan terdapat artikel dari user tersebut yang belum dihapus');
-        }
-        User::find($user->id)->delete();
-        Helper::printlog('Menghapus Pengguna Dengan ID ' . $user->id . ' Dari Database');
-        return redirect()->route('users.index')
-                        ->with('success','Data penguna berhasil dihapus');
+        return $this->userService->deleteUser($id);
     }
 }

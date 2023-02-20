@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Cp;
 
+use App\Models\Slider;
 use Illuminate\Http\Request;
 use App\Services\SliderService;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SliderRequest;
 
@@ -53,9 +55,9 @@ class SliderController extends Controller
      * @param  \App\Slider  $slider
      * @return \Illuminate\Http\Response
      */
-    public function show(Slider $slider)
+    public function show($id)
     {
-        abort(404);
+        return $this->sliderService->getDetailSlider($id);
     }
 
     /**
@@ -66,9 +68,7 @@ class SliderController extends Controller
      */
     public function edit(Slider $slider)
     {
-        return view('cp.slider.edit', [
-            'slider' => $slider
-        ]);
+        abort(404);
     }
 
     /**
@@ -78,26 +78,15 @@ class SliderController extends Controller
      * @param  \App\Slider  $slider
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Slider $slider)
+    public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'image' => 'image',
-            'caption' => 'required'
-        ]);
+        return $this->sliderService->updateSlider($request, $id);
+    }
 
-        if ($request->hasFile('image')) {
-            removeFile($slider->image);
-            $file = $request->file('image');
-            $sliderImage = $file->move('files/slider/', generateFileName($request->caption, $file));
-        }
 
-        $slider->update([
-            'image' => !empty($sliderImage) ? $sliderImage : $slider->image,
-            'caption' => $request->caption,
-        ]);
-
-        return redirect(route('cp.sliders.index'))
-                    ->with('success', 'Slider berhasil diupdate.');
+    public function changeSliderOrder(Request $request)
+    {
+       return $this->sliderService->changeSliderOrder($request);
     }
 
     /**
@@ -106,10 +95,8 @@ class SliderController extends Controller
      * @param  \App\Slider  $slider
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Slider $slider)
+    public function destroy($id)
     {
-        $slider->delete();
-
-        return redirect(route('cp.sliders.index'))->with('success', 'Slider berhasil dihapus.');
+        return $this->sliderService->deleteSlider($id);
     }
 }

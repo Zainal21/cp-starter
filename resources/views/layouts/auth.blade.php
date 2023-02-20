@@ -37,7 +37,7 @@
                         <div class="simple-footer">
                             <span>Copyright &copy; {{ date('Y') }}</span>
                             <div class="bullet"></div>
-                            <span>Develop By </span>
+                            <span>Develop By IT Development</span>
                         </div>
                     </div>
                 </div>

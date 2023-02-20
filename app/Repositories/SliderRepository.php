@@ -18,12 +18,12 @@ class SliderRepository implements SliderContract
 {
     public function getLatestSlider()
     {
-        return Slider::latest()->get();
+        return Slider::order()->get();
     }
 
     public function getSliderItemById($id)
     {
-        return Slider::where('id', $id)->first();
+        return Slider::findOrfail($id);
     }
     
     public function createNewSlider($data)

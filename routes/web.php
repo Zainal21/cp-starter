@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth'], function(){
         Route::group(['prefix' => 'content'], function(){
             // sliders
             // Route::get('sliders/datatables', [SliderController::class, 'getDatatable'])->name('slider.datatable');
+            Route::post('/sliders/change-order', [SliderController::class, 'changeSliderOrder'])->name('sliders.move');
             Route::resource('/sliders', SliderController::class);
             // categories
             Route::get('categories/datatables', [CategoryController::class, 'getDatatable'])->name('category.datatable');
@@ -48,6 +49,7 @@ Route::group(['middleware' => 'auth'], function(){
             // posts resources
             Route::get('post/datatables', [PostController::class, 'postDatatables'])->name('posts.datatable');
             Route::resource('post', PostController::class);
+            
             // trash and restore (utils)
             Route::get('posts-in-trash/datatables', [PostController::class, 'postInTrashDatatables'])->name('posts-in-trash.datatable');
             Route::get('post/utils/trash', [PostController::class, 'getPostTrash'])->name('post.trash');

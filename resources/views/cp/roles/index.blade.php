@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.app')
 @section('title', 'Roles')
 @section('content')
 <div class="section-header">
@@ -8,20 +8,18 @@
     <h2 class="section-title m-0 mb-4">
         Data Role
     </h2>
-    @can('role-create')
     <a href="{{ route('roles.create') }}" class="btn btn-primary">Tambah Role Baru</a>
-    @endcan
 </div>
 <div class="card shadow card-body">
     @include('components.flash-message')
     <div class="table-responsive">
-        <table class="table table-striped" id="table-role">
+        <table class="table table-bordered table-striped" id="table-role">
             <thead>
                 <tr>
-                    <th class="text-center">
+                    <th>
                         #
                     </th>
-                    <th>Nma Role</th>
+                    <th>Nama Role</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -34,20 +32,9 @@
                         <a href="{{ route('roles.show', Crypt::encrypt($role->id)) }}" class="btn btn-info"
                             data-toggle="tooltip" data-placement="top" title="Lihat Detail"><i
                                 class="fas fa-eye"></i></a>
-                        @can('role-edit')
                         <a href="{{ route('roles.edit', Crypt::encrypt($role->id)) }}" class="btn btn-primary"
-                            data-toggle="tooltip" data-placement="top" title="Hapus Data"><i
+                            data-toggle="tooltip" data-placement="top" title="Ubah Data"><i
                                 class="fas fa-edit"></i></a>
-                        @endcan
-                        @can('role-delete')
-                        <form action="{{ route('roles.destroy', $role->id) }}"
-                            onsubmit="return confirm('Apakah anda yakin untuk menghapus data tersebut ?')" method="POST"
-                            class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                        </form>
-                        @endcan
                     </td>
                 </tr>
                 @endforeach

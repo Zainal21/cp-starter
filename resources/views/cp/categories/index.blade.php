@@ -168,7 +168,7 @@
                     $('#name').val(data.name)
                     $('#CategoryFormModal').modal('show')
                 })
-                .catch((e) => console.log(e))
+                .catch((e) => console.error(e))
         }
 
         const showCategories = () => {

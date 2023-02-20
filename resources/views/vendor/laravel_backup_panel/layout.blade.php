@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Perawatan Website')
+
 @section('content')
 <div class="section-header">
     <h1>Perawatan Website</h1>

@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class UserCpSeeder extends Seeder
@@ -22,5 +23,14 @@ class UserCpSeeder extends Seeder
             'email' => 'admin@administrator.com',
             'password' => bcrypt('password')
         ]);
+
+
+        $role = Role::create(['name' => 'administrator']);
+
+        $permissions = Permission::pluck('id','id')->all();
+
+        $role->syncPermissions($permissions);
+
+        $user->assignRole([$role->id]);
     }
 }

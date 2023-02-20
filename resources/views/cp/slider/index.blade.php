@@ -15,7 +15,7 @@
     <div class="card shadow card-body">
         <div class="table-responsive">
             <div class="table-responsive">
-                <table class="table table-striped" id="table-sliders">
+                <table class="table table-bordered table-striped" id="table-sliders">
                     <thead>
                         <tr>
                             <th class="table-fit">#</th>
@@ -50,8 +50,10 @@
                                 </td>
                                 <td>{{ $slider->caption }}</td>
                                 <td class="table-fit">
-                                    <button onClick="edit(`'.$row->id.'`)" class="btn btn-primary btn-sm text-white mx-2">Edit</button>
-                                    <button onClick="deletePost(`'.$row->id.'`)" class="btn btn-danger btn-sm text-white mx-2">Delete</button>
+                                    <button onClick="showDetailSlider({{ $slider->id }})"
+                                        class="btn btn-primary btn-sm text-white mx-2">Edit</button>
+                                    <button onClick="deleteSlider({{ $slider->id }})"
+                                        class="btn btn-danger btn-sm text-white mx-2">Delete</button>
                                 </td>
                             </tr>
                         @empty
@@ -78,16 +80,17 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="name">Nama</label>
-                            <input type="text" id="name" class="form-control" name="name"
-                                placeholder="Masukkan Nama Kategori">
-                        </div>
-                        <div class="form-group">
+                            <input type="hidden" name="id" id="id">
                             <label for="caption" class="col-form-label text-right">Caption</label>
                             <textarea id="caption" cols="30" rows="5"
                                 class="form-control{{ $errors->has('caption') ? ' is-invalid' : '' }}" style="height: auto;" name="caption">{{ old('caption') }}</textarea>
                         </div>
                         <div class="form-group">
+                            <div class="image-previous-container collapse">
+                                <img src="#" class="img-fluid" alt="" id="img-previous"
+                                    style="width: 200px" />
+                                <p class="my-2 text-muted">Gambar Sebelumnya</p>
+                            </div>
                             <label for="image" class="text-right">Image</label>
                             <div class="mb-2">
                                 <img src="" class="img-fluid" alt="" id="upload-img-preview"
@@ -118,13 +121,19 @@
     <script>
         $(document).ready(function() {
             $('#btn-create-slider').on('click', function() {
+                clearForm();
+                $('.image-previous-container').addClass('collapse')
                 $('#sliderFormModal').modal('show')
             });
 
             $('#form-sliders').on('submit', function(e) {
                 e.preventDefault();
                 let formData = new FormData(this)
-                ajaxRequestFormData(formData, $(this).attr('action'), "POST")
+                let id = $('#id').val();
+                console.log(id)
+                let route = id !== '' ? `{{ url('cp/content/sliders/`+id+`') }}` : $(this).attr('action')
+                let formAdded = id !== '' ? formData.append('_method', 'PUT') : null;
+                ajaxRequestFormData(formData, route, "POST")
                     .then(({
                         message
                     }) => {
@@ -136,7 +145,6 @@
                             window.location.reload()
                         })
                     }).catch((e) => {
-                        console.log(e)
                         if (typeof(e.responseJSON.message) == 'object') {
                             let textError = '';
                             $.each(e.responseJSON.message, function(key, value) {
@@ -158,13 +166,136 @@
             })
         })
 
-        $('.move').click(function(event) {
-            $.post('', {
-                type: $(this).attr('data-type'),
-                id: $(this).attr('id')
-            }, function(data, textStatus, xhr) {
-                window.location.reload();
-            });
+
+        const deleteSlider = (id) => {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "untuk mengapus Slider tersebut!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus Sekarang!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let route = `{{ url('cp/content/sliders/` + id + `') }}`
+                    ajaxRequest(null, route, 'DELETE')
+                        .then(({
+                            message
+                        }) => {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: message,
+                                icon: 'success',
+                            }).then(() => {
+                                window.location.reload()
+                            })
+                        })
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
+                }
+            })
+        }
+
+        const showDetailSlider = (id) => {
+            clearForm()
+            ajaxRequest(null, `{{ url('cp/content/sliders/` + id + `') }}`, 'GET')
+                .then(({
+                    data
+                }) => {
+                    $('.image-previous-container').removeClass('collapse')
+                    let asset = "{{ url('/') }}"
+                    $('#id').val(data.id)
+                    $('#name').val(data.name)
+                    $('#caption').val(data.caption)
+                    $('#img-previous').attr('src', `${asset}/${data.image}`)
+                    $('#sliderFormModal').modal('show')
+                })
+                .catch((e) => console.error(e))
+        }
+
+        $(".js-upload-image").change(function(event) {
+            makePreview(this);
+            $("#upload-img-preview").show();
+            $("#upload-img-delete").show();
         });
+
+        function makePreview(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $("#upload-img-preview").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#upload-img-delete").click(function(event) {
+            event.preventDefault();
+            $("#upload-img-preview").attr("src", "").hide();
+            $(".custom-file-input").val(null);
+            $(this).hide();
+        });
+
+
+        $('.move').click(function(event) {
+            ajaxRequest({
+                    type: $(this).attr('data-type'),
+                    id: $(this).attr('id')
+                }, "{{ route('sliders.move') }}", 'POST')
+                .then(({
+                    message
+                }) => {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: message,
+                        icon: 'success',
+                    }).then(() => {
+                        window.location.reload()
+                    })
+                })
+                .catch((e) => {
+                    if (typeof(e.responseJSON.message) == 'object') {
+                        let textError = '';
+                        $.each(e.responseJSON.message, function(key, value) {
+                            textError += `${value}<br>`
+                        });
+                        Swal.fire({
+                            title: 'Gagal!',
+                            html: textError,
+                            icon: 'error',
+                        })
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: e.responseJSON.message,
+                            icon: 'error',
+                        })
+                    }
+                })
+        });
+
+        function clearForm(){
+            $('#id').val('')
+            $('#caption').val('')
+            $('#form-sliders')[0].reset()
+        }
     </script>
 @endpush
