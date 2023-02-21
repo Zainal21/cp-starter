@@ -10,18 +10,17 @@
             <input type="text" id="name" class="form-control @error('name') is-invalid @enderror" name="name"
                 autofocus="" value="{{ $role->name }}" readonly />
         </div>
-        @if (!empty($rolePermissions))
-            @foreach ($rolePermissions as $items)
+        <div class="row">
+            @foreach ($permission as $value)
                 <div class="col-md-4">
-                    <div class="control-label">{{ $items->general_name }}</div>
-                    <label class="custom-switch mt-2 on">
-                        <input type="checkbox" name="permission[]" checked="true" class="custom-switch-input" value="1"
-                            disabled>
+                    <div class="control-label">{{ $value->general_name }}</div>
+                    <label class="custom-switch mt-2">
+                        {{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, ['class' => 'custom-switch-input', 'disabled']) }}
                         <span class="custom-switch-indicator"></span>
                     </label>
                 </div>
             @endforeach
-        @endif
+        </div>
         <div class="row">
             <div class="col-md-3 my-2">
                 <a href="{{ route('roles.index') }}" class="btn btn-danger">kembali</a>

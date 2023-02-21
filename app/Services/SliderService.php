@@ -24,7 +24,8 @@ class SliderService
             $sliders = $this->sliderRepository->getLatestSlider();
             return $sliders;
         } catch (\Throwable $th) {
-            throw $th->getMessage();
+            Log::info($th->getMessage());
+            throw abort(500);
         }
     }
 

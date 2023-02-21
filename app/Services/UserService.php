@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Helpers\ResponseHelper;
+use Illuminate\Support\Facades\Log;
 use App\Repositories\UserRepository;
 
 class UserService
@@ -21,7 +22,8 @@ class UserService
             $users = $this->userRepository->getUsers();
             return $users;
         } catch (\Throwable $th) {
-            return $th->getMessage() ?? 'Terjadi kesalahan saat memproses data';
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            throw abort(500);
         }
     }
 
@@ -31,7 +33,8 @@ class UserService
             $roles = $this->userRepository->getRoles();
             return $roles;
         } catch (\Throwable $th) {
-            return $th->getMessage() ?? 'Terjadi kesalahan saat memproses data';
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            throw abort(500);
         }
     }
 

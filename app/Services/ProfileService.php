@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Helpers\ResponseHelper;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Repositories\ProfileRepository;
 use Illuminate\Support\Facades\Validator;
-
 
 class ProfileService
 {
@@ -19,16 +19,24 @@ class ProfileService
 
     public function getUserProfile($id)
     {
-        $user = $this->profileRepository->getUserById($id);
-        if(!$user) return redirect()->back();
-        return view('cp.user_profile.profile', compact('user'));
+        try {
+            $user = $this->profileRepository->getUserById($id);
+            return $user;
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            throw abort(500);
+        }
     }
 
     public function getUserChangePassword()
     {
-        $id = auth()->user()->id;
-        $user = $this->profileRepository->getUserById($id);
-        return view('cp.user_profile.password', compact('user'));
+        try {
+            $user = $this->profileRepository->getUserById($id);
+            return $user;
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            throw abort(500);
+        }
     }
 
     public function changeUserPassword($request, $id)

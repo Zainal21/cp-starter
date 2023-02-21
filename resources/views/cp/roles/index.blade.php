@@ -24,23 +24,84 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($roles as $role)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $role->name }}</td>
-                    <td>
-                        <a href="{{ route('roles.show', Crypt::encrypt($role->id)) }}" class="btn btn-info"
-                            data-toggle="tooltip" data-placement="top" title="Lihat Detail"><i
-                                class="fas fa-eye"></i></a>
-                        <a href="{{ route('roles.edit', Crypt::encrypt($role->id)) }}" class="btn btn-primary"
-                            data-toggle="tooltip" data-placement="top" title="Ubah Data"><i
-                                class="fas fa-edit"></i></a>
-                    </td>
-                </tr>
-                @endforeach
             </tbody>
         </table>
     </div>
 </div>
 @endsection
-@include('components.data-table')
+
+@include('components.data-table ')
+
+@push('scripts')
+    <script>
+        $(document).ready(function(){
+            showRoleAndPermission();
+        });
+
+        const showRoleAndPermission = () => {
+            const columns = [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+
+                {
+                    data: 'action',
+                    name: 'action'
+                },
+            ]
+            showDataTable('#table-role', "{{ route('role.datatable') }}", columns)
+        }
+
+
+        const deleteRole = (id) => {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "untuk menghapus data tersebut!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus Sekarang!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let route = `{{ url('cp/roles/` + id + `') }}`
+                    ajaxRequest(null, route, 'DELETE')
+                        .then(({
+                            message
+                        }) => {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: message,
+                                icon: 'success',
+                            }).then(() => {
+                                window.location.reload()
+                            })
+                        })
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
+                }
+            })
+        }
+    </script>
+@endpush

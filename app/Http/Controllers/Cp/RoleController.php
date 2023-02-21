@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Cp;
 
 use Illuminate\Http\Request;
+use App\Services\RoleService;
+use App\Http\Requests\RoleRequest;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
@@ -11,6 +13,7 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
+    private $roleService;
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +21,12 @@ class RoleController extends Controller
      */
     public function __construct()
     {
-      
+      $this->roleService =  new RoleService();;
+    }
+
+    public function getDatatable()
+    {
+        return $this->roleService->getDatatable();
     }
     /**
      * Display a listing of the resource.
@@ -27,8 +35,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id','DESC')->paginate(5);
-        return view('cp.roles.index',compact('roles'));
+        return view('cp.roles.index');
     }
 
     /**
@@ -38,7 +45,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permission = Permission::get();
+        $permission = $this->roleService->getAllPermission();
         return view('cp.roles.create',compact('permission'));
     }
 
@@ -48,18 +55,9 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:roles,name',
-            'permission' => 'required',
-        ]);
-    
-        $role = Role::create(['name' => $request->input('name')]);
-        $role->syncPermissions($request->input('permission'));
-       
-        return redirect()->route('roles.index')
-                        ->with('success','Data hak akses pengguna berhasil ditambahkan');
+        return $this->roleService->createNewRole($request->all());
     }
 
     /**
@@ -70,13 +68,11 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        $dec = Crypt::Decrypt($id);
-        $role = Role::find($dec);
-        $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
-            ->where("role_has_permissions.role_id",$dec)
-            ->get();
-    
-        return view('cp.roles.show',compact('role','rolePermissions'));
+        $id_encrypt = Crypt::Decrypt($id);
+        $role = $this->roleService->getRoleById($id_encrypt);
+        $permission = $this->roleService->getAllPermission();
+        $rolePermissions = $this->roleService->getRoleUserPermission($id_encrypt);
+        return view('cp.roles.show',compact('role','rolePermissions', 'permission'));
     }
 
     /**
@@ -87,12 +83,10 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $dec = Crypt::Decrypt($id);
-        $role = Role::find($dec);
-        $permission = Permission::get();
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$dec)
-            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
-            ->all();
+        $id_encrypt = Crypt::Decrypt($id);
+        $role = $this->roleService->getRoleById($id_encrypt);
+        $permission = $this->roleService->getAllPermission();
+        $rolePermissions = $this->roleService->getRoleUserPermission($id_encrypt);
         return view('cp.roles.edit',compact('role','permission','rolePermissions'));
     }
 
@@ -103,20 +97,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RoleRequest $request, $id)
     {
-        // dd($request);
-        $this->validate($request, [
-            'name' => 'required',
-            'permission' => 'required',
-        ]);
-        $role = Role::find($id);
-        $role->name = $request->input('name');
-        $role->save();
-        $role->syncPermissions($request->input('permission'));
-        // Helper::printlog('Mengubah Data Role Dengan ID ' . $id . ' Dari Database');    
-        return redirect()->route('roles.index')
-                        ->with('success','Data hak akses penggunan berhasil diubah');
+        return $this->roleService->updateUserRole($request->all(), $id);
     }
 
     /**
@@ -127,9 +110,7 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        Role::destroy($id);
-        // Helper::printlog('Menghapus Data Role dengan ID ' . $id . ' Dari Database');
-        return redirect()->route('roles.index')
-                        ->with('success','Data hak akses pengguna berhasil dihapus');
+        $id_encrypt = Crypt::Decrypt($id);
+        return $this->roleService->deleteRole($id_encrypt);
     }
 }

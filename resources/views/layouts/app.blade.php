@@ -140,7 +140,23 @@
                     type: method,
                     dataType: 'json',
                     data: data,
+                    beforeSend: function() {
+                        Swal.fire({
+                            allowOutsideClick: false,
+                            title: 'Harap Menunggu',
+                            text: 'Permintaan sedang di proses.',
+                            imageUrl: "{{ asset('assets/img/loading.png') }}",
+                            imageHeight: 150,
+                            imageWidth: 150,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        })
+                    },
                     success: function(response) {
+                        Swal.close()
                         if (response.status) {
                             resolve(response)
                         } else {
@@ -148,6 +164,7 @@
                         }
                     },
                     error: function(err) {
+                        Swal.close()
                         reject(err)
                     }
                 });
@@ -164,8 +181,24 @@
                     cache: false,
                     contentType: false,
                     processData: false,
+                    beforeSend:function(){
+                        Swal.fire({
+                            allowOutsideClick: false,
+                            title: 'Harap Menunggu',
+                            text: 'Permintaan sedang di proses.',
+                            imageUrl: "{{ asset('assets/img/loading.png') }}",
+                            imageHeight: 150,
+                            imageWidth: 150,
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        })
+                    },
                     dataType: "json",
                     success: function(response) {
+                        Swal.close()
                         if (response.status) {
                             resolve(response)
                         } else {
@@ -173,6 +206,7 @@
                         }
                     },
                     error: function(err) {
+                        Swal.close()
                         reject(err)
                     }
                 });

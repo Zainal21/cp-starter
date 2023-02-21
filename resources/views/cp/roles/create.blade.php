@@ -5,7 +5,7 @@
         <h1>Tambah Role</h1>
     </div>
     <div class="card shadow card-body">
-        <form action="{{ route('roles.store') }}" method="POST">
+        <form action="{{ route('roles.store') }}" method="POST" id="form-roles">
             @csrf
             <div class="form-group">
                 <label for="name">Name</label>
@@ -48,5 +48,41 @@
                 $('#input-'.id).prop('checked', false)
             }
         }
+
+        $(document).ready(function(){
+            $('#form-roles').on('submit', function(e){
+                e.preventDefault();
+                ajaxRequest($(this).serialize(), $(this).attr('action'), 'POST')
+                    .then(({
+                        message
+                    }) => {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: message,
+                            icon: 'success',
+                        }).then(() => {
+                            window.location.href = "{{route('roles.index')}}"
+                        })
+                    }).catch((e) => {
+                        if (typeof(e.responseJSON.message) == 'object') {
+                            let textError = '';
+                            $.each(e.responseJSON.message, function(key, value) {
+                                textError += `${value}<br>`
+                            });
+                            Swal.fire({
+                                title: 'Gagal!',
+                                html: textError,
+                                icon: 'error',
+                            })
+                        } else {
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: e.responseJSON.message,
+                                icon: 'error',
+                            })
+                        }
+                    })
+            });
+        })
     </script>
 @endpush

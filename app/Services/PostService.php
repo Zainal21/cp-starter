@@ -6,6 +6,7 @@ use DataTables;
 use App\Helpers\Utils;
 use Illuminate\Support\Str;
 use App\Helpers\ResponseHelper;
+use Illuminate\Support\Facades\Log;
 use App\Repositories\PostRepository;
 
 class PostService
@@ -106,12 +107,22 @@ class PostService
 
     public function getLatestPosts()
     {
-        return $this->postRepository->getLatestPosts();
+        try {
+            return $this->postRepository->getLatestPosts();
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            throw abort(500);
+        }
     }
 
     public function getPostById($id)
     {
-        return $this->postRepository->getPostById($id);
+        try {
+            return $this->postRepository->getPostById($id);
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            throw abort(500);
+        }
     }
 
     public function createNewPost($request)
@@ -156,59 +167,90 @@ class PostService
 
     public function publishPosts($id)
     {
-        $published = $this->postRepository->publishPost($id);
-        if(!$published) return ResponseHelper::error('Data Postingan tidak ditemukan');
-        return ResponseHelper::success($published, 'Data Postingan berhasil dihapus');
+        try {
+            $published = $this->postRepository->publishPost($id);
+            if(!$published) return ResponseHelper::error('Data Postingan tidak ditemukan');
+            return ResponseHelper::success($published, 'Data Postingan berhasil dihapus');
+        } catch (\Throwable $th) {
+            return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
+        }
     }
 
     public function archivePosts($id)
     {
-        $published = $this->postRepository->archivePost($id);
-        if(!$published) return ResponseHelper::error('Data Postingan tidak ditemukan');
-        return ResponseHelper::success($published, 'Data Postingan berhasil dihapus');
+        try {
+            $archived = $this->postRepository->archivePost($id);
+            if(!$archived) return ResponseHelper::error('Data Postingan tidak ditemukan');
+            return ResponseHelper::success($archived, 'Data Postingan berhasil dihapus');
+        } catch (\Throwable $th) {
+            return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
+        }
     }
 
     public function getPostInTrash()
     {
-        return $this->postRepository->getPostInTrash();
+        try {
+            return $this->postRepository->getPostInTrash();
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            throw abort(500);
+        }
     }
 
     public function deletePermanentTrashedItem($id)
     {
-        $post = $this->postRepository->getPostInTrashById($id);
-        
-        if(file_exists($post->thumbnail)){
-            unlink($post->thumbnail);
+        try {
+            $post = $this->postRepository->getPostInTrashById($id);
+            
+            if(file_exists($post->thumbnail)){
+                unlink($post->thumbnail);
+            }
+            $post->forceDelete();
+            return ResponseHelper::success(1, 'Data Postingan berhasil dihapus secara permanen');
+        } catch (\Throwable $th) {
+            return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
-        $post->forceDelete();
-        return ResponseHelper::success(1, 'Data Postingan berhasil dihapus secara permanen');
     }
 
     public function deletePermanentAllTrash()
     {
-        $post = $this->postRepository->getPostInOnlyTrash();;
-        if($post->count() < 1){
-            return ResponseHelper::error('Data Postingan Tidak ditemukan');
-        }
-        
-        foreach($post as $article){
-            if(file_exists($article->thumbnail)){
-                unlink($article->thumbnail);
+        try {
+            $post = $this->postRepository->getPostInOnlyTrash();;
+            if($post->count() < 1){
+                return ResponseHelper::error('Data Postingan Tidak ditemukan');
             }
-            $article->forceDelete();
+            
+            foreach($post as $article){
+                if(file_exists($article->thumbnail)){
+                    unlink($article->thumbnail);
+                }
+                $article->forceDelete();
+            }
+            return ResponseHelper::success('Data semua data Postingan ditempat sampah berhasil dihapus');
+        } catch (\Throwable $th) {
+            return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
-        return ResponseHelper::success('Data semua data Postingan ditempat sampah berhasil dihapus');
     }
 
     public function restoreAllPostInTrash()
     {
-        $restored = $this->postRepository->restoreAllPostInTrash();
-        return ($restored < 1) ? ResponseHelper::error('Data Postingan Tidak ditemukan') : ResponseHelper::success($post,'Semua Data Post yang telah terhapus berhasil di-pulihkan');
+        try {
+            $restored = $this->postRepository->restoreAllPostInTrash();
+            return ($restored < 1) ? ResponseHelper::error('Data Postingan Tidak ditemukan') : ResponseHelper::success($post,'Semua Data Post yang telah terhapus berhasil di-pulihkan');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            throw abort(500);
+        }
     }
 
     public function restorePostInTrashById($id)
     {
-        $restored = $this->postRepository->restoreAllPostInTrash();
-        return ($restored < 1) ? ResponseHelper::error('Data Postingan Tidak ditemukan') : ResponseHelper::success($post,'Semua Data Post yang telah terhapus berhasil di-pulihkan');
+        try {
+            $restored = $this->postRepository->restoreAllPostInTrash();
+            return ($restored < 1) ? ResponseHelper::error('Data Postingan Tidak ditemukan') : ResponseHelper::success($post,'Semua Data Post yang telah terhapus berhasil di-pulihkan');
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            throw abort(500);
+        }
     }
 }

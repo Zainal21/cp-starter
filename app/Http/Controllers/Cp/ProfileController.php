@@ -26,7 +26,9 @@ class ProfileController extends Controller
     
     public function profile($id)
     {
-        return $this->profileService->getUserProfile($id);
+        $user = $this->profileService->getUserProfile($id);
+        if(!$user) return redirect()->back();
+        return view('cp.user_profile.profile', compact('user'));
     }
 
     public function changeProfile(Request $request, $id)
@@ -36,7 +38,9 @@ class ProfileController extends Controller
 
     public function password()
     {
-      return $this->profileService->getUserChangePassword();
+        $id = auth()->user()->id;
+        $user = $this->profileService->getUserChangePassword($id);
+        return view('cp.user_profile.password', compact('user'));
     }
 
     public function changePassword(changePasswordRequest $request, $id)

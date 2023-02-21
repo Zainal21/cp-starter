@@ -36,7 +36,10 @@ Route::group(['middleware' => 'auth'], function(){
     Route::view('/backup', 'laravel_backup_panel::layout');
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
     Route::group(['prefix' => 'cp'], function(){
+        // role and permission module
+        Route::get('role/datatables', [RoleController::class, 'getDatatable'])->name('role.datatable');
         Route::resource('roles', RoleController::class);
+        // users module 
         Route::resource('users', UserController::class);
         Route::group(['prefix' => 'content'], function(){
             // sliders

@@ -136,8 +136,8 @@
                 ajaxRequestFormData(formData, route, "POST")
                     .then(({
                         message
-                    }) => {
-                        Swal.fire({
+                }) => {
+                    Swal.fire({
                             title: 'Berhasil!',
                             text: message,
                             icon: 'success',
