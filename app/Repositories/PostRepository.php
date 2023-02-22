@@ -73,8 +73,8 @@ class PostRepository implements PostContract
      */
     public function publishPost($id)
     {
-        $posts = Post::findOrfail($id);
-        return $posts->setPublish();
+        $posts = Post::whereId($id)->update(['status' => 'publish']);
+        return $posts;
     }
     /**
      * Query for change status posts into archived post 
@@ -85,8 +85,8 @@ class PostRepository implements PostContract
      */
     public function archivePost($id)
     {
-        $posts = Post::findOrfail($id);
-        return $posts->setArchive();
+        $posts = Post::whereId($id)->update(['status'=>'archive']);
+        return $posts;
     }
     /**
      * Query for get all post in trash
