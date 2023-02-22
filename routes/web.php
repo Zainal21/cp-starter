@@ -61,8 +61,8 @@ Route::group(['middleware' => 'auth'], function(){
             Route::delete('post/utils/delete-permanent', [PostController::class, 'deletePermanentAllTrashedItem'])->name('post.delete-all-permanent');
             Route::delete('post/utils/{id}/delete-permanent', [PostController::class, 'deletePermanentTrashedItem'])->name('post.delete-permanent');
             // arhive and publish 
-            Route::put('post/{id}/publish', [PostController::class, 'PublishPost'])->name('publish.post');
-            Route::put('post/{id}/archive', [PostController::class, 'ArchivePost'])->name('archive.post');
+            Route::put('post/{id}/publish', [PostController::class, 'publishPost'])->name('publish.post');
+            Route::put('post/{id}/archive', [PostController::class, 'archivePost'])->name('archive.post');
         });
         Route::group(['prefix' => 'settings'], function(){
             //change user profile
@@ -71,6 +71,9 @@ Route::group(['middleware' => 'auth'], function(){
             //change password
             Route::get('change-password/{id}', [ProfileController::class, 'password'])->name('user-password');
             Route::put('change-password/{id}', [ProfileController::class, 'changePassword'])->name('user-password.update');
+            // website setting
+            Route::get('site-setting', [SettingController::class, 'index'])->name('setting.index');
+            Route::put('site-setting', [SettingController::class, 'updateSetting'])->name('setting.update');
         });
     });
 });

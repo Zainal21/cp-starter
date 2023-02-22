@@ -23,11 +23,24 @@ class PostRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'title' => 'required|unique:posts,title',
-            'category_id' => 'required',
-            'thumbnail' => 'required|image|mimes:jpg,png,gif,jpeg,svg|max:2048',
-            'content' => 'required',
-        ];
+        switch ($this->method()) {
+            case 'POST':
+                return [
+                    'title' => 'required|unique:posts,title',
+                    'category_id' => 'required',
+                    'thumbnail' => 'required|image|mimes:jpg,png,gif,jpeg,svg|max:2048',
+                    'content' => 'required',
+                ];
+                break;
+            default:
+            return [
+                'title' => 'required',
+                'category_id' => 'required',
+                'thumbnail' => 'image|mimes:jpg,png,gif,jpeg,svg|max:2048',
+                'content' => 'required',
+            ];
+            break;
+        }
+       
     }
 }

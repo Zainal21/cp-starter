@@ -118,39 +118,76 @@ class PostController extends Controller
     {
        return $this->postService->deletePost($id);
     }
-
-    public function PublishPost($id)
+    /**
+     * action to publish post
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
+    public function publishPost($id)
     {
         return $this->postService->publishPosts($id);
     }
-
-    public function ArchivePost($id)
+    /**
+     * action to archive post
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
+    public function archivePost($id)
     {
         return $this->postService->archivePosts($id);
     }
-
+    /**
+     * show the post item in trash 
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function getPostTrash()
     {
         $data = $this->postService->getPostInTrash();
         return view('cp.post.trash', compact('data'));
     }
-
-
+    /**
+     * action to delete permanent trash item by id
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was store.
+     */
     public function deletePermanentTrashedItem($id)
     {
         return $this->postService->deletePermanentTrashedItem($id);
     }
-
+    /**
+     * action to delete permanent all trash item
+     * 
+     * @return The service that was store.
+     */
     public function deletePermanentAllTrashedItem()
     {
         return $this->postService->deletePermanentAllTrash();
     }
-
+    /**
+     * action to restore post item in trash by id
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was store.
+     */
     public function restoreTrashedItem($id)
     {
         return $this->postService->restorePostInTrashById();
     }
-
+    /**
+     * action to restore all item in trash
+     * 
+     * @return The service that was store.
+     */
     public function restoreAllTrashedItem()
     {
        return $this->postService->restoreAllPostInTrash();

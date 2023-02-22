@@ -17,7 +17,11 @@ class PostService
     {
         $this->postRepository = new PostRepository();
     }
-
+    /**
+     * service to get datatables of latest post
+     * 
+     * @return The service that was find.
+     */
     public function getDatatables()
     {
         $posts = $this->postRepository->getLatestPosts();
@@ -65,7 +69,11 @@ class PostService
         ->addIndexColumn()
         ->make(true);
     }
-    
+    /**
+     * service to get datatable post in trash
+     * 
+     * @return The service that was find.
+     */  
     public function getDatatablesPostInTrash()
     {
         $posts = $this->postRepository->getPostInTrash();
@@ -104,7 +112,11 @@ class PostService
         ->addIndexColumn()
         ->make(true);
     }
-
+    /**
+     * service to get latest post
+     * 
+     * @return The service that was find.
+     */
     public function getLatestPosts()
     {
         try {
@@ -114,7 +126,13 @@ class PostService
             throw abort(500);
         }
     }
-
+    /**
+     * service to get post by id
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was find.
+     */
     public function getPostById($id)
     {
         try {
@@ -124,7 +142,13 @@ class PostService
             throw abort(500);
         }
     }
-
+  /**
+     * service to create new post
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function createNewPost($request)
     {
         try {
@@ -136,7 +160,14 @@ class PostService
             return ResponseHelper::error($th->getMessage());
         }
     }
-
+    /**
+     * service to update post
+     * 
+     * @param Id request The request string
+     * @param Request request The request object
+     * 
+     * @return The service that was updated.
+     */
     public function updatePost($request, $id)
     {
         $post = $this->postRepository->getPostById($id);
@@ -157,14 +188,26 @@ class PostService
 
         return $updated ? ResponseHelper::success($post, 'Data postingan berhasil diperbarui') : ResponseHelper::error('Gagal saat memperbarui postingan');
     }
-
+    /**
+     * service to delete post
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was deleted.
+     */
     public function deletePost($id)
     {
         $deleted = $this->postRepository->deletePost($id);
         if(!$deleted) return ResponseHelper::error('Data Postingan tidak ditemukan');
         return ResponseHelper::success($deleted, 'Data Postingan berhasil dihapus');
     }
-
+    /**
+     * service to publish post
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was updated.
+     */
     public function publishPosts($id)
     {
         try {
@@ -175,7 +218,13 @@ class PostService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to archive post
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was updated.
+     */
     public function archivePosts($id)
     {
         try {
@@ -186,7 +235,11 @@ class PostService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to get all post in trash
+     * 
+     * @return The service that was find.
+     */
     public function getPostInTrash()
     {
         try {
@@ -196,7 +249,13 @@ class PostService
             throw abort(500);
         }
     }
-
+    /**
+     * service to delete permanent post item in trash by id
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was deleted.
+     */
     public function deletePermanentTrashedItem($id)
     {
         try {
@@ -211,7 +270,11 @@ class PostService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to permanent all post in trash
+     * 
+     * @return The service that was deleted.
+     */
     public function deletePermanentAllTrash()
     {
         try {
@@ -231,7 +294,11 @@ class PostService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to restore all post in trash
+     * 
+     * @return The service that was updated.
+     */
     public function restoreAllPostInTrash()
     {
         try {
@@ -242,7 +309,13 @@ class PostService
             throw abort(500);
         }
     }
-
+    /**
+     * service to restore post in trash by id
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was store.
+     */
     public function restorePostInTrashById($id)
     {
         try {

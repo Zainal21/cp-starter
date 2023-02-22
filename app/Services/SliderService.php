@@ -17,7 +17,11 @@ class SliderService
     {
         $this->sliderRepository = new SliderRepository();
     }
-
+    /**
+     * service to get datatables
+     * 
+     * @return The service that was find.
+     */
     public function getDatatables()
     {
         try {
@@ -28,7 +32,13 @@ class SliderService
             throw abort(500);
         }
     }
-
+    /**
+     * service to get details slider data by Id
+     * 
+     * @param Id service that was string.
+     * 
+     * @return The service that was find.
+     */
     public function getDetailSlider($id)
     {
         try {
@@ -38,7 +48,13 @@ class SliderService
             return ResponseHelper::error($th->getMessage());
         }
     }
-
+    /**
+     * service to create new slider
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function createSlider($request)
     {
         try {
@@ -59,7 +75,13 @@ class SliderService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to change slider order
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was updated.
+     */
     public function changeSliderOrder($request)
     {
         try {
@@ -89,7 +111,15 @@ class SliderService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to update slider data
+     * 
+     * @param Request request The request object
+     * 
+     * @param Id request The request slider
+     * 
+     * @return The service that was updated.
+     */
     public function updateSlider($request,$id)
     {
        try {
@@ -109,7 +139,13 @@ class SliderService
         return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
        }
     }
-
+    /**
+     * service to delete slider 
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was deleted.
+     */
     public function deleteSlider($id)
     {
         try {

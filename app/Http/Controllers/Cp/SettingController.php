@@ -9,11 +9,21 @@ use App\Http\Requests\SettingRequest;
 
 class SettingController extends Controller
 {
+    /**
+     * Show the form for change setting page
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        return view('cp.settings.index');
+        $settings = (new SettingService)->getSetting();
+        return view('cp.settings.index', compact('settings'));
     }
-
+    /**
+     * an action to update website setting
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function updateSetting(SettingRequest $request)
     {
         return (new SettingService)->update($request->validated());

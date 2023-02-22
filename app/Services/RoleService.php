@@ -17,7 +17,11 @@ class RoleService
     {
         $this->roleRepository = new RoleRepository();
     }
-
+    /**
+     * service to get datatables all roles
+     * 
+     * @return The service that was find.
+     */
     public function getDatatable()
     {
         $roles = $this->roleRepository->getAllRoles();
@@ -33,7 +37,13 @@ class RoleService
         ->addIndexColumn()
         ->make(true);
     }
-
+    /**
+     * service to get role permission by id
+     * 
+     * @param Id request The request inteher
+     * 
+     * @return The service that was store.
+     */
     public function getRoleUserPermission($id)
     {
         try {
@@ -44,7 +54,14 @@ class RoleService
             throw abort(500);
         }
     }
-
+    /**
+     * service to update role permission
+     * 
+     * @param Request request The request object
+     * @param id request The request integer
+     * 
+     * @return The service that was updated.
+     */
     public function updateUserRole($request, $id)
     {
         try {
@@ -57,7 +74,13 @@ class RoleService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to get role by id
+     * 
+     * @param Id request The request Integer
+     * 
+     * @return The service that was find.
+     */
     public function getRoleById($id)
     {
         try {
@@ -68,7 +91,11 @@ class RoleService
             throw abort(500);
         }
     }
-
+    /**
+     * service to all roles
+     * 
+     * @return The service that was find.
+     */
     public function getAllRoles()
     {
         try {
@@ -78,7 +105,11 @@ class RoleService
             throw abort(500);
         }
     }
-
+    /**
+     * service to all permission
+     * 
+     * @return The service that was find.
+     */
     public function getAllPermission()
     {
         try {
@@ -88,7 +119,13 @@ class RoleService
             throw abort(500);
         }
     }
-
+    /**
+     * service to create new role
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function createNewRole($request)
     {
         try {
@@ -103,7 +140,13 @@ class RoleService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to delete role
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was deleted.
+     */
     public function deleteRole($id)
     {
         try {

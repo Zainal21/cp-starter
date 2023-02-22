@@ -13,7 +13,7 @@ class SettingRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,12 +24,12 @@ class SettingRequest extends FormRequest
     public function rules()
     {
         return [
-            'website_name' => 'required',
+            'name' => 'required',
             'tagline' => 'required',
+            'desription' => 'required',
+            'phone' => 'required',
             'address' => 'required',
             'code_analytic_google' => 'required',
-            'description' => 'required',
-            'cover' => 'required',
         ];
     }
 }

@@ -45,7 +45,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('cp.users.create',compact('roles'));
+        abort(404);
     }
 
     /**

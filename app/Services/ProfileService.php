@@ -16,7 +16,13 @@ class ProfileService
     {
         $this->profileRepository = new ProfileRepository();
     }
-
+    /**
+     * Service to change user profile
+     * 
+     * @param Id request The request string
+     * 
+     * @return The service that was store.
+     */
     public function getUserProfile($id)
     {
         try {
@@ -27,8 +33,14 @@ class ProfileService
             throw abort(500);
         }
     }
-
-    public function getUserChangePassword()
+    /**
+     * Service to change user password
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
+    public function getUserChangePassword($id)
     {
         try {
             $user = $this->profileRepository->getUserById($id);
@@ -38,7 +50,14 @@ class ProfileService
             throw abort(500);
         }
     }
-
+    /**
+     * Service to change user password
+     * 
+     * @param Request request The request object
+     * @param Id request The request integer
+     * 
+     * @return The service that was store.
+     */
     public function changeUserPassword($request, $id)
     {
         $user = $this->profileRepository->getUserById($id);
@@ -51,7 +70,14 @@ class ProfileService
             return ResponseHelper::error('Password gagal diperbarui');
         }
     }
-
+    /**
+     * Service to change user profile data
+     * 
+     * @param Request request The request object
+     * @param Id request The request string
+     * 
+     * @return The service that was store.
+     */
     public function changeUserProfile($request, $id)
     {
         $user = $this->profileRepository->getUserById($id);

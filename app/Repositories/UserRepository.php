@@ -17,26 +17,57 @@ interface UserContract
 
 class UserRepository implements UserContract
 {
+    /**
+     * query for all latest users
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function getUsers()
     {
         return User::latest()->get();
     }
-
+    /**
+     * query for get all roles
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function getRoles()
     {
         return Role::all();
     }
-    
+    /**
+     * query for find user by id
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function getUserById($id)
     {
         return User::find($id);
     }
-    
+    /**
+     * query for create new user
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function createNewUser($data)
     {
         return User::create($data);
     }
-    
+    /**
+     * query for delete user by id
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function deleteUsers($id)
     {
         return User::find($id)->delete();

@@ -15,7 +15,13 @@ class UserService
     {
         $this->userRepository = new UserRepository;
     }
-
+    /**
+     * service to get all users
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was find.
+     */
     public function getUsers()
     {
         try {
@@ -26,7 +32,13 @@ class UserService
             throw abort(500);
         }
     }
-
+    /**
+     * service to get all roles
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was find.
+     */
     public function getRoles()
     {
         try {
@@ -37,7 +49,13 @@ class UserService
             throw abort(500);
         }
     }
-
+    /**
+     * service to create new user
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function createNewuser($request)
     {
         try {
@@ -54,7 +72,13 @@ class UserService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to get detail users
+     * 
+     * @param id request The request string
+     * 
+     * @return The service that was find.
+     */
     public function getDetailUser($id)
     {
         try {
@@ -64,7 +88,13 @@ class UserService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to update user role
+     * 
+     * @param Request request The request object and string
+     * 
+     * @return The service that was updated.
+     */
     public function updateUserRole($request, $id)
     {
         try {
@@ -77,7 +107,13 @@ class UserService
             return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
         }
     }
-
+    /**
+     * service to delete user
+     * 
+     * @param id request The request string
+     * 
+     * @return The service that was deleted.
+     */
     public function deleteUser($id)
     {
         try {

@@ -16,7 +16,13 @@ class CategoryService
     {
         $this->categoryRepository = new CategoryRepository();
     } 
-
+    /**
+     * service for show datatable category
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was find.
+     */
     public function getCategories()
     {
         $categories = $this->categoryRepository->getCategories();
@@ -31,19 +37,37 @@ class CategoryService
         ->addIndexColumn()
         ->make(true);
     }
-
+    /**
+     * service for get latest category
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was find.
+     */
     public function getLatestCategory()
     {
         return $this->categoryRepository->getCategories();
     }
-
+    /**
+     * service for get category by id
+     * 
+     * @param Id request The request id
+     * 
+     * @return The service that was find.
+     */
     public function getCategoryById($id)
     {
         $category = $this->categoryRepository->getCategoryById($id);
         if(!$category) return ResponseHelper::error('Data Kategori tidak ditemukan', null, 404);
         return ResponseHelper::success($category, 'Data Kategori Berhasil ditemukan');
     }
-
+    /**
+     * service for create category
+     * 
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function createCategory($request)
     {
         $schema = Validator::make($request->all(), [
@@ -58,7 +82,14 @@ class CategoryService
             return ResponseHelper::success($created, 'Data Kategori Berhasil ditambahkan');
         }
     }
-
+    /**
+     * service for update category by id
+     * 
+     * @param Id request The request string
+     * @param Request request The request object
+     * 
+     * @return The service that was store.
+     */
     public function updateCategory($request, $id)
     {
         $schema = Validator::make($request->all(), [
@@ -73,7 +104,13 @@ class CategoryService
             return ResponseHelper::success($updated, 'Data Kategori Berhasil diperbarui');
         }
     }
-
+    /**
+     * service for delete category
+     * 
+     * @param Category request The request collection
+     * 
+     * @return The service that was deleted.
+     */
     public function deleteCategory($category)
     {
         if($category->post()->count()){
