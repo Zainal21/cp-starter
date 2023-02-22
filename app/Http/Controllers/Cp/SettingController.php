@@ -9,6 +9,10 @@ use App\Http\Requests\SettingRequest;
 
 class SettingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:site-setting-edit', ['only' => ['index','updateSetting']]);
+    }
     /**
      * Show the form for change setting page
      *

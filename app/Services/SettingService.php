@@ -29,8 +29,8 @@ class SettingService
      */
     public function update($data)
     {
-        $updateSetting = (new SettingRepository)->update($data);
-        if(!$updateSetting){
+        $update = (new SettingRepository)->update($data);
+        if(!$update){
             return ResponseHelper::error('Data konfigurasi website gagal di ubah');
         }
         return ResponseHelper::success($update, 'Data konfigurasi website berhasil di ubah');

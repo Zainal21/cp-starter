@@ -25,7 +25,16 @@ class PostController extends Controller
      */
     public function __construct()
     {
-      $this->postService = new PostService();
+        // initialize service
+        $this->postService = new PostService();
+        // initialze middleware
+        $this->middleware('permission:post-list|post-create|post-edit|post-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:post-create', ['only' => ['create','store']]);
+        $this->middleware('permission:post-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:post-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:publish-post', ['only' => ['publishPost']]);
+        $this->middleware('permission:archive-post', ['only' => ['archivePost']]);
+        $this->middleware('permission:trash-post', ['only' => ['getPostsTrash','deletePermanentTrashedItem', 'deletePermanentAllTrashedItem','restoreTrashedItem','restoreAllTrashedItem']]);
     }
     
 

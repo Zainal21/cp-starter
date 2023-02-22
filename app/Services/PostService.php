@@ -122,7 +122,7 @@ class PostService
         try {
             return $this->postRepository->getLatestPosts();
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
             throw abort(500);
         }
     }
@@ -138,7 +138,7 @@ class PostService
         try {
             return $this->postRepository->getPostById($id);
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
             throw abort(500);
         }
     }
@@ -245,7 +245,7 @@ class PostService
         try {
             return $this->postRepository->getPostInTrash();
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
             throw abort(500);
         }
     }
@@ -278,7 +278,7 @@ class PostService
     public function deletePermanentAllTrash()
     {
         try {
-            $post = $this->postRepository->getPostInOnlyTrash();;
+            $post = $this->postRepository->getPostInOnlyTrash();
             if($post->count() < 1){
                 return ResponseHelper::error('Data Postingan Tidak ditemukan');
             }
@@ -305,7 +305,7 @@ class PostService
             $restored = $this->postRepository->restoreAllPostInTrash();
             return ($restored < 1) ? ResponseHelper::error('Data Postingan Tidak ditemukan') : ResponseHelper::success($post,'Semua Data Post yang telah terhapus berhasil di-pulihkan');
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
             throw abort(500);
         }
     }
@@ -322,7 +322,7 @@ class PostService
             $restored = $this->postRepository->restoreAllPostInTrash();
             return ($restored < 1) ? ResponseHelper::error('Data Postingan Tidak ditemukan') : ResponseHelper::success($post,'Semua Data Post yang telah terhapus berhasil di-pulihkan');
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
             throw abort(500);
         }
     }

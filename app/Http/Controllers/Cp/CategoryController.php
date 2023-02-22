@@ -21,7 +21,13 @@ class CategoryController extends Controller
      */
     public function __construct()
     {
+        // initialize category service
         $this->categoryService = new CategoryService();
+        // initialize middleware
+        $this->middleware('permission:category-list|category-create|category-edit|category-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:category-create', ['only' => ['create','store']]);
+        $this->middleware('permission:category-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:category-delete', ['only' => ['destroy']]);
     }
 
     public function getDatatable()

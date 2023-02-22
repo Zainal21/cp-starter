@@ -26,7 +26,7 @@ class SettingRequest extends FormRequest
         return [
             'name' => 'required',
             'tagline' => 'required',
-            'desription' => 'required',
+            'description' => 'required',
             'phone' => 'required',
             'address' => 'required',
             'code_analytic_google' => 'required',

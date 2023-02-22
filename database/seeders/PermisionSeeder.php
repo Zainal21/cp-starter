@@ -30,15 +30,24 @@ class PermisionSeeder extends Seeder
             ['name' => 'category-edit', 'guard_name' => 'web', 'general_name' => 'Mengubah Kategori'],
             ['name' => 'category-delete', 'guard_name' => 'web', 'general_name' => 'Menghapus Kategori'],
             // roles
-            // ['name' => 'category-list', 'guard_name' => 'web', 'general_name' => 'Melihat Daftar Kategori'],
-            // ['name' => 'category-create', 'guard_name' => 'web', 'general_name' => 'Membuat Kategori'],
-            // ['name' => 'category-edit', 'guard_name' => 'web', 'general_name' => 'Mengubah Kategori'],
-            // ['name' => 'category-delete', 'guard_name' => 'web', 'general_name' => 'Menghapus Kategori'],
+            ['name' => 'roles-list', 'guard_name' => 'web', 'general_name' => 'Melihat Daftar Hak Akses Pengguna'],
+            ['name' => 'roles-create', 'guard_name' => 'web', 'general_name' => 'Membuat Hak Akses Pengguna'],
+            ['name' => 'roles-edit', 'guard_name' => 'web', 'general_name' => 'Mengubah Hak Akses Pengguna'],
+            ['name' => 'roles-delete', 'guard_name' => 'web', 'general_name' => 'Menghapus Hak Akses Pengguna'],
             //  users
-            // ['name' => 'category-list', 'guard_name' => 'web', 'general_name' => 'Melihat Daftar Kategori'],
-            // ['name' => 'category-create', 'guard_name' => 'web', 'general_name' => 'Membuat Kategori'],
-            // ['name' => 'category-edit', 'guard_name' => 'web', 'general_name' => 'Mengubah Kategori'],
-            // ['name' => 'category-delete', 'guard_name' => 'web', 'general_name' => 'Menghapus Kategori'],
+            ['name' => 'users-list', 'guard_name' => 'web', 'general_name' => 'Melihat Daftar Pengguna'],
+            ['name' => 'users-create', 'guard_name' => 'web', 'general_name' => 'Membuat Pengguna Baru'],
+            ['name' => 'users-edit', 'guard_name' => 'web', 'general_name' => 'Mengubah Role Pengguna'],
+            ['name' => 'users-delete', 'guard_name' => 'web', 'general_name' => 'Menghapus Pengguna'],
+            // site setting
+            ['name' => 'site-setting-edit', 'guard_name' => 'web', 'general_name' => 'Mengubah Informasi Website'],
+            // sliders
+            ['name' => 'sliders-list', 'guard_name' => 'web', 'general_name' => 'Melihat List Slider'],
+            ['name' => 'sliders-create', 'guard_name' => 'web', 'general_name' => 'Membuat Slider Baru'],
+            ['name' => 'sliders-edit', 'guard_name' => 'web', 'general_name' => 'Mengubah Data Slider'],
+            ['name' => 'sliders-delete', 'guard_name' => 'web', 'general_name' => 'Menghapus Data Slider'],
+            // backup
+            ['name' => 'backup-apps-and-db', 'guard_name' => 'web', 'general_name' => 'Mencadangkan App & DB'],
         ];
 
         Permission::insert($permissions);

@@ -15,7 +15,13 @@ class SliderController extends Controller
     
     public function __construct()
     {
+        // initialize service
         $this->sliderService = new SliderService();
+        // initialize permission
+        $this->middleware('permission:sliders-list|sliders-create|sliders-edit|sliders-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:sliders-create', ['only' => ['create','store']]);
+        $this->middleware('permission:sliders-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:sliders-delete', ['only' => ['destroy']]);
     }
       /**
      * Display a listing of the resource.

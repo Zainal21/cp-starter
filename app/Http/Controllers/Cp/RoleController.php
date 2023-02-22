@@ -21,7 +21,13 @@ class RoleController extends Controller
      */
     public function __construct()
     {
-      $this->roleService =  new RoleService();
+        // initialze service
+        $this->roleService =  new RoleService();
+        // initialize middleware
+        $this->middleware('permission:roles-list|roles-create|roles-edit|roles-delete', ['only' => ['index','store']]);
+        $this->middleware('permission:roles-create', ['only' => ['create','store']]);
+        $this->middleware('permission:roles-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:roles-delete', ['only' => ['destroy']]);
     }
 
     public function getDatatable()

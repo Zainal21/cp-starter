@@ -17,7 +17,9 @@
         <h2 class="section-title m-0 mb-4">
             Data Pengguna
         </h2>
-        <button class="btn btn-primary" id="btn-create-user">Tambah Pengguna Baru</button>
+        @can('user-create')
+            <button class="btn btn-primary" id="btn-create-user">Tambah Pengguna Baru</button>
+        @endcan
     </div>
     <div class="card shadow card-body">
         <div class="table-responsive">
@@ -47,17 +49,20 @@
                                         <span class="badge badge-info">
                                             {{ $role }}
                                         </span>
-                                        <button
-                                            onclick="showDetailUser(`{{ $user->id }}`, `{{ $role }}`)"
-                                            class="btn btn-primary btn-sm my-2 mx-2" data-toggle="tooltip"
-                                            data-placement="right" title="Ganti role pengguna"><i
-                                                class="fas fa-cog"></i></button>
+                                        @can('users-edit')
+                                            <button onclick="showDetailUser(`{{ $user->id }}`, `{{ $role }}`)"
+                                                class="btn btn-primary btn-sm my-2 mx-2" data-toggle="tooltip"
+                                                data-placement="right" title="Ganti role pengguna"><i
+                                                    class="fas fa-cog"></i></button>
+                                        @endcan
                                     @endforeach
                                 @endif
                             </td>
                             <td>
-                                <button type="submit" class="btn btn-danger my-2 mx-2"
-                                    onclick="deleteUsers(`{{ $user->id }}`)"><i class="fas fa-trash"></i></a>
+                                @can('users-delete')
+                                    <button type="submit" class="btn btn-danger my-2 mx-2"
+                                        onclick="deleteUsers(`{{ $user->id }}`)"><i class="fas fa-trash"></i></a>
+                                    @endcan
                             </td>
                         </tr>
                     @endforeach
@@ -335,6 +340,5 @@
                 })
                 .catch((e) => console.error(e))
         }
-
     </script>
 @endpush

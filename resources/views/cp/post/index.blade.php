@@ -9,9 +9,13 @@
             Data Informasi
         </h2>
         <div class="float-right">
-            <a href="{{ route('post.create') }}" class="btn btn-primary mb-3">Tambah</a>
-            <a href="{{ route('post.trash') }}" class="btn btn-danger mb-3" data-toggle="tooltip" data-placement="right"
-                title="Tempat Sampah"><i class="fas fa-trash"></i></a>
+            @can('post-list')
+                <a href="{{ route('post.create') }}" class="btn btn-primary mb-3">Tambah</a>
+            @endcan
+            @can('trash-post')
+                <a href="{{ route('post.trash') }}" class="btn btn-danger mb-3" data-toggle="tooltip" data-placement="right"
+                    title="Tempat Sampah"><i class="fas fa-trash"></i></a>
+            @endcan
         </div>
     </div>
     <div class="card shadow card-body">

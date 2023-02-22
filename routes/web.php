@@ -72,9 +72,9 @@ Route::group(['middleware' => 'auth'], function(){
             Route::get('change-password/{id}', [ProfileController::class, 'password'])->name('user-password');
             Route::put('change-password/{id}', [ProfileController::class, 'changePassword'])->name('user-password.update');
             // website setting
-            Route::get('site-setting', [SettingController::class, 'index'])->name('setting.index');
-            Route::put('site-setting', [SettingController::class, 'updateSetting'])->name('setting.update');
         });
+        Route::get('site-setting', [SettingController::class, 'index'])->name('setting.index');
+        Route::put('site-setting', [SettingController::class, 'updateSetting'])->name('setting.update');
     });
 });
 Auth::routes();

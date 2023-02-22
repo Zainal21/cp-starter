@@ -28,7 +28,7 @@ class UserService
             $users = $this->userRepository->getUsers();
             return $users;
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
             throw abort(500);
         }
     }
@@ -45,7 +45,7 @@ class UserService
             $roles = $this->userRepository->getRoles();
             return $roles;
         } catch (\Throwable $th) {
-            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');;
+            Log::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
             throw abort(500);
         }
     }
