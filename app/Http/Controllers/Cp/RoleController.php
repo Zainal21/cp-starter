@@ -21,7 +21,7 @@ class RoleController extends Controller
      */
     public function __construct()
     {
-      $this->roleService =  new RoleService();;
+      $this->roleService =  new RoleService();
     }
 
     public function getDatatable()
