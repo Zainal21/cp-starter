@@ -122,8 +122,8 @@ class SliderService
      */
     public function updateSlider($request,$id)
     {
-       try {
-        $slider = $this->sliderRepository->getSliderItemById($id);
+        try {
+            $slider = $this->sliderRepository->getSliderItemById($id);
             if ($request->hasFile('image')) {
                 Utils::removeFile($slider->image);
                 $file = $request->file('image');
@@ -135,9 +135,9 @@ class SliderService
                 'caption' => $request->caption,
             ]);
             return ResponseHelper::success(1, 'Data Slider berhasil di perbarui');
-       } catch (\Throwable $th) {
-        return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
-       }
+        } catch (\Throwable $th) {
+            return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memproses data');
+        }
     }
     /**
      * service to delete slider 
@@ -149,10 +149,11 @@ class SliderService
     public function deleteSlider($id)
     {
         try {
+            Utils::removeFile($this->sliderRepository->getSliderItemById($id)->image);
             $deleted = $this->sliderRepository->deleteSlider($id);
             return $deleted ? ResponseHelper::success(1, 'Data Slider berhasil dihapus') : ResponseHelper::error('Data Slider tidak ditemukan');
         } catch (\Throwable $th) {
-            return Response::error($th->getMessage() ?? 'Terjadi kesalahan saat memuat data');
+            return ResponseHelper::error($th->getMessage() ?? 'Terjadi kesalahan saat memuat data');
         }
     }
 
