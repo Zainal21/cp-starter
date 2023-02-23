@@ -187,5 +187,99 @@
             ]
             showDataTable('#table-trash-post', "{{ route('posts-in-trash.datatable') }}", columns)
         }
+
+        const deletePermanentPost = (id) => {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "untuk menghapus permanen data tersebut!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let route = `{{ url('cp/content/post/utils/` + id + `/delete-permanent') }}`
+                    ajaxRequest(null, route, 'DELETE')
+                        .then(({
+                            message
+                        }) => {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: message,
+                                icon: 'success',
+                            }).then(() => {
+                                showPostInTrash()
+                            })
+                        })
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
+                }
+            })
+        }
+
+        const restorePost = (id) => {
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "untuk memulihkan data tersebut!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let route = `{{ url('cp/content/post/utils/` + id + `/restore') }}`
+                    ajaxRequest(null, route, 'PUT')
+                        .then(({
+                            message
+                        }) => {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: message,
+                                icon: 'success',
+                            }).then(() => {
+                                showPostInTrash()
+                            })
+                        })
+                        .catch((e) => {
+                            if (typeof(e.responseJSON.message) == 'object') {
+                                let textError = '';
+                                $.each(e.responseJSON.message, function(key, value) {
+                                    textError += `${value}<br>`
+                                });
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    html: textError,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: e.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            }
+                        })
+                }
+            })
+        }
     </script>
 @endpush
