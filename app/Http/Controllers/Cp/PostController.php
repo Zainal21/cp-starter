@@ -190,7 +190,7 @@ class PostController extends Controller
      */
     public function restoreTrashedItem($id)
     {
-        return $this->postService->restorePostInTrashById();
+        return $this->postService->restorePostInTrashById($id);
     }
     /**
      * action to restore all item in trash
